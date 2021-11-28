@@ -8,6 +8,10 @@ pandas = "*"
 uvicorn = "*"
 fastapi = "*"
 sqlalchemy = "*"
+alembic = "*"
+numpy = "*"
+importlib-resources = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
