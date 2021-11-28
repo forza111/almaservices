@@ -10,3 +10,4 @@ class Calculation(Base):
 
     id = Column(Integer, primary_key=True, index=True, )
     result = Column(JSON, default=None)
+    status = Column(String, default="В очереди")
