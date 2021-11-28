@@ -3,7 +3,7 @@ import numpy as np
 import time
 
 
-def calc(date_start, date_fin, lag):
+def kern(date_start, date_fin, lag):
     """
     генерация промысловых показателей для нефтянной скважины за указанный период с указанной частотой
     Parameters

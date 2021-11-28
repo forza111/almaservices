@@ -9,4 +9,4 @@ class Calculation(Base):
     __tablename__ = "calculation"
 
     id = Column(Integer, primary_key=True, index=True, )
-    result = Column(JSON)
+    result = Column(JSON, default=None)
