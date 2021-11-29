@@ -3,29 +3,29 @@ from sqlalchemy.orm import Session
 
 import models, schemas
 from kernel import kern
-import database
+from database import get_db
+from datetime import date
+import time
 
 
-def change_status_calc(id: schemas.CalcCreate, db: Session = Depends(database.get_db)):
+def create_calc(db: Session, data: schemas.CalcResult, id: schemas.CalcCreate):
+    start_time = time.time()
     db_calc = db.query(models.Calculation).get(id)
-    db_calc.status = "Идет расчет"
-    db.add(db_calc)
-    db.commit()
-    db.refresh(db_calc)
-    return db_calc
-
-def create_calc(db: Session, data: schemas.CalcResult, id: schemas.CalcCreate, status_update: schemas.CalcStatus = Depends(change_status_calc(id))):
+    # db_calc.status = "Идет расчет"
+    # db.add(db_calc)
+    # db.commit()
     res = kern(data.date_strt, data.date_fin, data.lag)
-    db_calc = db.query(models.Calculation).get(id)
     db_calc.result = res
     db_calc.status = "Завершен"
+    db_calc.start_date = date.today()
+    db_calc.lead_time = str(time.time() - start_time)
     db.add(db_calc)
     db.commit()
     db.refresh(db_calc)
     return db_calc
 
 
-def create_id_calc(db: Session = Depends(database.get_db)):
+def create_id_calc(db: Session = Depends(get_db)):
     db_id_calc = models.Calculation()
     db.add(db_id_calc)
     db.commit()
