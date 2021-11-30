@@ -1,6 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, JSON, Date, Interval, DateTime
-from sqlalchemy.orm import relationship
-from sqlalchemy.orm import backref
+from sqlalchemy import Column,Integer, String, JSON, Interval, DateTime
 
 from database import Base
 

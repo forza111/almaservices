@@ -34,3 +34,6 @@ def create_id_calc(db: Session = Depends(get_db)):
     db.refresh(db_id_calc)
     return db_id_calc.id
 
+def get_last_calc(db: Session):
+    calculations = db.query(models.Calculation).order_by(models.Calculation.start_date.desc()).limit(10).all()
+    return calculations
