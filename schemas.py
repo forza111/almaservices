@@ -1,5 +1,6 @@
 import datetime
-from pydantic import BaseModel
+from typing import List
+from pydantic import BaseModel, Json
 
 class CalcCreate(BaseModel):
     id: int
@@ -12,3 +13,21 @@ class CalcResult(BaseModel):
 
 class CalcStatus(BaseModel):
     status: str
+
+class CalcList(BaseModel):
+    calculation_name: str
+    start_date: datetime.date
+    status: str
+
+    class Config:
+        orm_mode = True
+
+class CalcDetail(BaseModel):
+    start_date: datetime.date
+    status: str
+    result: Json
+    calculation_name: str = None
+
+
+    class Config:
+        orm_mode = True

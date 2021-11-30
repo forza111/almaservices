@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, JSON, Date, Interval
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, JSON, Date, Interval, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import backref
 
@@ -11,5 +11,6 @@ class Calculation(Base):
     id = Column(Integer, primary_key=True, index=True, )
     result = Column(JSON, default=None)
     status = Column(String, default="В очереди")
-    start_date = Column(Date)
+    start_date = Column(DateTime)
     lead_time = Column(Interval)
+    calculation_name = Column(String)
