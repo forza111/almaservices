@@ -1,21 +1,15 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, BackgroundTasks, Depends
-from time import sleep
 from sqlalchemy.orm import Session
-from sqlalchemy import text
 
+from crud import calculation
+from database import get_db
 from models import Calculation
 import schemas
-from kernel import kern
-from database import get_db
-from crud import calculation
 
 
-router = APIRouter(
-    prefix="/user",
-    tags=["users"]
-)
+router = APIRouter(tags=["Calculations API"])
 
 @router.post('/')
 async def create_calc_data(data: schemas.CalcResult, background_tasks: BackgroundTasks,
@@ -30,13 +24,23 @@ async def get_last_calculations(db: Session = Depends(get_db)):
     calculations = db.query(Calculation).order_by(Calculation.start_date.desc()).limit(10).all()
     return calculations
 
-@router.get('/calculation/{id}')
-async def get_detail_calculation(id: int, db: Session = Depends(get_db), name: bool = False, lead_time: bool = False):
-    calculations = db.query.add_column(Calculation.calculation_name).get(id)
-    # calculations = db.query(text(f"SELECT * FROM calculation WHERE calculation.id = {id}"))
-    # calculations = db.execute(select(Calculation.start_date, Calculation.status, Calculation.result, Calculation.calculation_name))
-
-    # if name:
-
-
-    return calculations
+@router.get('/calculation/{id}',response_model=schemas.CalcDetail, response_model_exclude_none=True)
+async def get_detail_calculation(id: int, name: Optional[bool]=None, lead_time: Optional[bool]=None, db: Session = Depends(get_db)):
+    calculations = db.query(Calculation).get(id)
+    response = {
+        "start_date": calculations.start_date,
+        "status": calculations.status,
+        "result": calculations.result,
+    }
+    if not name and not lead_time:
+        return response
+    if name and lead_time:
+        response["calculation_name"] = calculations.calculation_name
+        response["lead_time"] = calculations.lead_time
+        return response
+    if name:
+        response["calculation_name"] = calculations.calculation_name
+        return response
+    if lead_time:
+        response["lead_time"] = calculations.lead_time
+        return response

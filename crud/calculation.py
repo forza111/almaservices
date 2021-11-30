@@ -1,11 +1,13 @@
+import time
+
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-import models, schemas
+import datetime
+import models
+import schemas
 from kernel import kern
 from database import get_db
-import datetime
-import time
 
 
 def create_calc(db: Session, data: schemas.CalcResult, id: schemas.CalcCreate):
@@ -24,7 +26,6 @@ def create_calc(db: Session, data: schemas.CalcResult, id: schemas.CalcCreate):
     db.commit()
     db.refresh(db_calc)
     return db_calc
-
 
 def create_id_calc(db: Session = Depends(get_db)):
     db_id_calc = models.Calculation()
